@@ -1,0 +1,32 @@
+version: '2'
+    
+services:
+
+  db:
+    container_name: qa.mysql.${COMPOSE_PROJECT_NAME}
+    build: mysql
+    environment:
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWD}  
+        MYSQL_DATABASE: ${MYSQL_DB}
+    volumes:
+        - ../:/app
+        
+        
+  app:
+    container_name: qa.php.${COMPOSE_PROJECT_NAME}
+    build: php
+    volumes:
+        - ../:/app
+        - ./php/cache:/dev/shm
+
+  
+  nginx:
+    container_name: qa.nginx.${COMPOSE_PROJECT_NAME}
+    build: nginx 
+    ports:
+        - "${PORT_NUMBER}:80"
+    volumes:
+        - ../:/app
+        - ./nginx/logs:/var/log/nginx
+
+
